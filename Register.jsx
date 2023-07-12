@@ -2,105 +2,98 @@ import React, { useState } from 'react';
 import {
     MDBBtn,
     MDBContainer,
-    MDBRow,
-    MDBCol,
     MDBCard,
     MDBCardBody,
-    MDBCardImage,
     MDBInput,
-    MDBIcon,
     MDBCheckbox
 }
     from 'mdb-react-ui-kit';
+import { MDBRadio } from 'mdb-react-ui-kit';
 import HeaderCompo from './commonCompo/header';
 import { useNavigate } from 'react-router-dom';
 
 
+
 function Register() {
-    const [username ,setId] = useState("")
-    const [password ,setPassword] = useState("")
-    const [email ,setEmail] = useState("")
- 
+
+    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [gender, setGender] = useState('Male');
+
     const navigate = useNavigate()
 
-
-    const hendlesubmit = (e) =>{
-        e.preventDefault()
-        let data = {username , email , password,role:"2"}
-        // console.log(data);
-        if(validate()){
-
-            console.log("done");
-            fetch("http://localhost:5000/user",{
-                method: "POST",
-                headers:{
-                    "Content-Type":"application/json",
-                },
-                body:JSON.stringify(data)   
-            }).then((res)=>{
-              console.log("done");
-              navigate('/Loginpage2');
-            }).catch((err)=>{
-              console.log("error");
-            })
-        }
-        
-    }
     const validate = () => {
         let result = true
+
         if (username === "") {
             result = false
-            alert("enter a usernamee")
-        }
-        if (password === "") {
-            result = false
-            alert("enter a pasword")
+            alert("enter username")
         }
         if (email === "") {
             result = false
-            alert("enter a pasword")
+            alert("enter email")
         }
+        if (password === "") {
+            result = false
+            alert("enter password")
+        }
+
         return result
+
+    };
+    const hendllesubmit = (e) => {
+        e.preventDefault();
+        // console.log(username ,password, email);
+        let data = { username, password, email,gender,  role: 2 }
+        console.log(data);
+        if (validate()) {
+            fetch("http://localhost:5000/user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data)
+            }).then((res) => {
+                console.log("done");
+                navigate('/LoginuserPage');
+            }).catch((err) => {
+                console.log("error");
+            })
+        }
     }
     return (
         <>
             <HeaderCompo />
-            <MDBContainer fluid>
-                <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
-                    <MDBCardBody>
-                        <MDBRow>
-                            <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
-
-                                <p classNAme="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
-                                <form  onSubmit={hendlesubmit}>
-                                    <div className="d-flex flex-row align-items-center mb-4 ">
-                                        <MDBIcon fas icon="user me-3" size='lg' />
-                                        <MDBInput value={username}
-                                        onChange={e=>setId(e.target.value)}
-                                        label='Your Name' id='form1' type='text' className='w-100' />
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center mb-4">
-                                        <MDBIcon fas icon="envelope me-3" size='lg' />
-                                        <MDBInput value={email}
-                                        onChange={e=>setEmail(e.target.value)}
-                                         label='Your Email' id='form2' type='email' />
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center mb-4">
-                                        <MDBIcon fas icon="lock me-3" size='lg' />
-                                        <MDBInput value={password}
-                                        onChange={e=>setPassword(e.target.value)}
-                                         label='Password' id='form3' type='password' />
-                                    </div>
-                                    <MDBBtn className='mb-4' size='lg'>Register</MDBBtn>
-                                    </form>
-                            </MDBCol>
-                        <MDBCol md='10' lg='6' className='order-1 order-lg-2 d-flex align-items-center'>
-                            <MDBCardImage src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp' fluid />
-                        </MDBCol>
-                    </MDBRow>
-                </MDBCardBody>
-            </MDBCard>
-        </MDBContainer >
+            <MDBContainer fluid className='d-flex align-items-center justify-content-center bg-image' style={{ backgroundImage: 'url(https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp)' }}>
+                <div className='mask gradient-custom-3'></div>
+                <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
+                    <MDBCardBody className='px-5'>
+                        <h2 className="text-uppercase text-center mb-5">Create an account</h2>
+                        <form onSubmit={hendllesubmit}>
+                            <MDBInput wrapperClass='mb-4' value={username} onChange={(e) => setUsername(e.target.value)} label='Your Name' size='lg' id='form1' type='text' />
+                            <MDBInput wrapperClass='mb-4' value={email} onChange={(e) => setEmail(e.target.value)} label='Your Email' size='lg' id='form2' type='email' />
+                            <MDBInput wrapperClass='mb-4' value={password} label='Password' onChange={(e) => setPassword(e.target.value)} size='lg' id='form3' type='password' />
+                            {/* <MDBInput wrapperClass='mb-4' label='Repeat your password' size='lg' id='form4' type='password' /> */}
+                            {/* <div className='d-flex flex-row justify-content-center mb-4'>
+                            <MDBCheckbox name='flexCheck' id='flexCheckDefault' label='I agree all statements in Terms of service' />
+                        </div> */}
+                            <div>
+                                <MDBRadio name='flexRadioDefault'
+                                checked={gender === 'Male'} value="Male" onClick={() => setGender('Male')}
+                                id='flexRadioDefault1' label='male' />
+                                <MDBRadio name='flexRadioDefault'
+                                 checked={gender === 'Female'} value="Female" onClick={() => setGender('Female')}
+                                id='flexRadioDefault2' label="female" defaultChecked />
+                                <MDBRadio name='flexRadioDefault'
+                                 checked={gender === 'other'} value="other" onClick={() => setGender('othher')}
+                                id='flexRadioDefault2' label="other" defaultChecked />
+                            </div>
+                            <MDBBtn className='mb-4 w-100 gradient-custom-4' size='lg'>Register</MDBBtn>
+                        </form>
+                    </MDBCardBody>
+                </MDBCard>
+            </MDBContainer>
         </>
     );
 }

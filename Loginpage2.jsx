@@ -15,12 +15,16 @@ import { useNavigate } from 'react-router-dom';
 import HeaderCompo from './commonCompo/header';
 
 function Loginpage() {
-    // useEffect(()=>{
-    //     sessionStorage.clear()
-    //  },[])
-    const navigate = useNavigate();
+   
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    
+    useEffect(() => {
+            sessionStorage.clear()
+        },[])
+        
+        const navigate = useNavigate();
+
     const Prosedlogin = (e) => {
         e.preventDefault()
         if (validate()) {
@@ -29,11 +33,17 @@ function Loginpage() {
                 return res.json();
                 // console.log(res);
             }).then((resp) => {
-                console.log(resp[0]);
-                if (resp[0].role == 1) {
-                    navigate("/admin")
+                console.log(resp.length);
+                if (resp[0]) {
+                    sessionStorage.setItem('username', username)
+                    sessionStorage.setItem('role', resp[0].role)
+                    if (resp[0].role == 1) {
+                        navigate("/admin")
+                    } else {
+                        navigate("/")
+                    }
                 } else {
-                    navigate("/")
+                    alert("invalid user")
                 }
             }).catch((err) => {
                 console.log("login fail" + err);
@@ -82,13 +92,13 @@ function Loginpage() {
                                 <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
                                 <a href="!#">Forgot password?</a>
                             </div>
-                           
+
 
                             <MDBBtn className="mb-4 w-100" size="lg">Sign in</MDBBtn>
                         </form>
                         <MDBBtn className="mb-4 w-100 " size="lg">
-                                <Link to="/Register" className='color'>NEW-USER</Link>
-                            </MDBBtn>
+                            <Link to="/Register" className='color'>NEW-USER</Link>
+                        </MDBBtn>
 
                     </MDBCol>
 
